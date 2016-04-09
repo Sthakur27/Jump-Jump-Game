@@ -5,14 +5,14 @@ int level=0;
 color c1=#00bfff;
 color c2=#138b38;
 color c3=#c61531;
-boolean paused;
+boolean paused=false;
 int cheatscore=0;
 int score=cheatscore;
 boolean magnet,jetpack;
 boolean enablepack=false;
 boolean slowed=false;
 int a,b,c,d;
-boolean clicktostart=true;
+int clicktostart=0;
 powerup Drake;
 runner greg,charlie;
 jumper Stan;
@@ -34,20 +34,58 @@ void setup(){
 }
 
 void draw(){
-  if (clicktostart==true)
+  if (clicktostart==0)
       {
       fill(0, 102, 153);
       textSize(70);
       textAlign(CENTER,CENTER);
       text("Click to Start!", 400, 300);
-      textSize(20);
-      textAlign(CENTER,CENTER);
-      text("Tap 'a' to accelerate left and 'd' to accelerate right", 400, 400);
-      textSize(20);
-      textAlign(CENTER,CENTER);
-      text("Or 'wasd' if you get jet pack upgrade", 400, 450);
       }
-  else
+  if (clicktostart==1)
+      {
+      background(250);
+      
+      textSize(40);
+      text("Click to Continue",400,100);
+      
+      textSize(20);
+      textAlign(CENTER,CENTER);
+      fill(c3);
+      text("Use 'a' and 'd' to accelerate     left or right", 400, 200);
+      ellipse(475,203,10,10);
+      
+      fill(color(#32b9ff));
+      text("Score points by collecting treasure:",400,300);
+      ellipse(590,303,20,20);
+      fill(0,0,0);
+      textSize(20);
+      textAlign(CENTER);
+      text(("X"), 590,303+7.5);
+      
+      fill(color(#ff7832));
+      text("Bounce off of         to not fall!",400,400);
+      ellipse(415,390, 25,25);
+      fill(0,0,0);
+      textSize(25);
+      textAlign(CENTER);
+      text("↑",415,398); 
+      
+      fill(color(#287070));
+      text("Collect      for powerups!",400,500);
+      ellipse(361,490,25,25);
+      fill(255,255,255);
+      text("¤",361+0.41,490  +8.5);
+      fill(color(#287070));
+      textSize(18);
+      text("green enables jetpack (WASD), blue slows time, and pink increases size",400,550);
+      
+      fill(color(#b26e87));
+      textSize(25);
+      text("press 'p' to pause",400,650);
+      
+    
+      }
+  if (clicktostart>=2 && paused==false)
       {
       background(250);
       fill(c1);
@@ -146,7 +184,7 @@ class runner
           void update()
           {
           //speed up along with score
-          speed=(abs(originalspeed)+log(score+1))*direction(speed);
+          speed=(abs(originalspeed)+(log(score+1))/2)*direction(speed);
           if (xpos<0 || xpos>800)
           {
           speed=speed*-1;  
@@ -364,6 +402,11 @@ void keyPressed()
         {
         score+=5; 
         }
+    if (key==('p'))
+        {
+        if (paused==false){paused=true;}
+        else{paused=false;}
+        }
     }
 
 class powerup
@@ -394,8 +437,8 @@ class powerup
         void randomtime()
             {
               time=second();
-              //timecheck=(second()+5+int(random(5,15)));
-              timecheck=(second()+3);
+              timecheck=(second()+5+int(random(5,15)));
+              //timecheck=(second()+3);
             }
         
         String randompower()
@@ -502,5 +545,6 @@ class powerup
 
 void mouseClicked()
   {
-  clicktostart=false;
+  clicktostart+=1;
+  Drake.reset();
   }
